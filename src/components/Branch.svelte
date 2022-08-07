@@ -29,6 +29,9 @@
 
 <!-- <circle r="5" cx={x} cy={y} fill={color} /> -->
 <style>
+	text {
+		font-family: 'Roboto Mono', monospace;
+	}
 	.branch {
 		opacity: 1;
 		transition: all 1s linear;

@@ -1,4 +1,5 @@
 import { color } from 'd3-color';
+import { interpolateRgb } from 'd3-interpolate';
 import { scaleLinear } from 'd3-scale';
 export type Branch = {
 	index: number;
@@ -13,7 +14,6 @@ export type Branch = {
 };
 
 interface CreateBranchArgs {
-	measuringEl: HTMLDivElement;
 	words: string[];
 	word: number;
 	branches: { value: Branch[] };
@@ -26,7 +26,6 @@ interface CreateBranchArgs {
 }
 
 export const createTree = (text: string, centralHue: number): Branch[] => {
-	const measuringEl = document.createElement('div');
 	const words = text.split(/\s+/);
 	const branches = { value: [] as Branch[] };
 	createBranch({
@@ -37,15 +36,15 @@ export const createTree = (text: string, centralHue: number): Branch[] => {
 		y: 100,
 		angle: 90,
 		fontSize: 30,
-		measuringEl,
 		branchLevel: 0,
 		centralHue
 	});
 	return branches.value;
 };
 
+const glyphSize = 14;
+
 const createBranch = ({
-	measuringEl,
 	words,
 	word,
 	branches,
@@ -57,8 +56,7 @@ const createBranch = ({
 	branchLevel = 0
 }: CreateBranchArgs): void => {
 	const currentWord = words[word];
-	// const branchLength = 56;
-	const branchLength = getTextWidth(currentWord, fontSize);
+	const branchLength = glyphSize * currentWord.length * (fontSize / 30);
 	const leftAngle = angle - (22 - branchLevel * 1.1);
 	const rightAngle = angle + (22 - branchLevel * 1.1);
 	const { x: nextX, y: nextY } = getXYFromDistWithAngle(x, y, angle, branchLength);
@@ -73,10 +71,9 @@ const createBranch = ({
 		fontSize,
 		branchLevel,
 		word: currentWord,
-		color: getColor(centralHue)
+		color: getColor(centralHue, word)
 	});
 	createBranch({
-		measuringEl,
 		words,
 		word: word + 1,
 		branches,
@@ -88,7 +85,6 @@ const createBranch = ({
 		centralHue
 	});
 	createBranch({
-		measuringEl,
 		words,
 		word: word + 2,
 		branches,
@@ -126,7 +122,7 @@ function getXYFromDistWithAngle(
 	return { x: targetX, y: targetY };
 }
 
-function getColor(centralHue: number) {
+function getColor(centralHue: number, index = 0) {
 	const hueScale = scaleLinear()
 		.domain([0, 1])
 		.range([centralHue - (30 % 360), centralHue + (30 % 360)]);
@@ -138,5 +134,9 @@ function getColor(centralHue: number) {
 	const h = hueScale(Math.random());
 	const s = satScale(Math.random());
 	const l = lightScale(Math.random());
-	return color(`hsl(${h}, ${s}%, ${l}%)`)?.formatHex() || '#ff0000';
+	const interpolator = interpolateRgb(
+		'#6A4B28',
+		color(`hsl(${h}, ${s}%, ${l}%)`)?.formatHex() || '#ffffff'
+	);
+	return interpolator(index / 12);
 }
