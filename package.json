@@ -19,6 +19,7 @@
 		"@types/d3-color": "^3.1.0",
 		"@types/d3-scale": "^4.0.2",
 		"@types/p5": "^1.4.2",
+		"@types/uuid": "^8.3.4",
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
 		"@typescript-eslint/parser": "^5.27.0",
 		"eslint": "^8.16.0",
@@ -38,6 +39,7 @@
 		"d3-color": "^3.1.0",
 		"d3-scale": "^4.0.2",
 		"p5": "^1.4.2",
-		"p5-svelte": "^3.1.2"
+		"p5-svelte": "^3.1.2",
+		"uuid": "^8.3.2"
 	}
 }
