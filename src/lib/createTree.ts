@@ -28,6 +28,63 @@ interface CreateBranchArgs {
 export const createTree = (text: string, centralHue: number): Branch[] => {
 	const words = text.split(/\s+/);
 	const branches = { value: [] as Branch[] };
+	const level = 10;
+	let wordCounter = 0;
+	const createBranch = ({
+		words,
+		word,
+		branches,
+		x,
+		y,
+		angle,
+		fontSize,
+		centralHue,
+		branchLevel
+	}: CreateBranchArgs): void => {
+		if (fontSize < 20 || wordCounter >= words.length - 1) return;
+		const currentWord = words[wordCounter];
+		const branchLength = glyphSize * currentWord.length * (fontSize / 30);
+		const leftAngle = angle - (22 - branchLevel * 1.1);
+		const rightAngle = angle + (22 - branchLevel * 1.1);
+		const { x: nextX, y: nextY } = getXYFromDistWithAngle(x, y, angle, branchLength);
+
+		branches.value.push({
+			index: word,
+			x,
+			y,
+			angle,
+			length: branchLength,
+			fontSize,
+			branchLevel,
+			word: currentWord,
+			color: getColor(centralHue, word)
+		});
+
+		wordCounter++;
+
+		createBranch({
+			words,
+			word: word + 1,
+			branches,
+			x: nextX,
+			y: nextY,
+			angle: leftAngle,
+			fontSize: fontSize - 1,
+			branchLevel: branchLevel - 1,
+			centralHue
+		});
+		createBranch({
+			words,
+			word: word + 2,
+			branches,
+			x: nextX,
+			y: nextY,
+			angle: rightAngle,
+			fontSize: fontSize - 1,
+			branchLevel: branchLevel - 1,
+			centralHue
+		});
+	};
 	createBranch({
 		words,
 		branches,
@@ -36,76 +93,13 @@ export const createTree = (text: string, centralHue: number): Branch[] => {
 		y: 100,
 		angle: 90,
 		fontSize: 30,
-		branchLevel: 0,
+		branchLevel: level,
 		centralHue
 	});
 	return branches.value;
 };
 
 const glyphSize = 14;
-
-const createBranch = ({
-	words,
-	word,
-	branches,
-	x,
-	y,
-	angle,
-	fontSize,
-	centralHue,
-	branchLevel = 0
-}: CreateBranchArgs): void => {
-	const currentWord = words[word];
-	const branchLength = glyphSize * currentWord.length * (fontSize / 30);
-	const leftAngle = angle - (22 - branchLevel * 1.1);
-	const rightAngle = angle + (22 - branchLevel * 1.1);
-	const { x: nextX, y: nextY } = getXYFromDistWithAngle(x, y, angle, branchLength);
-	if (branchLevel === 12) return;
-
-	branches.value.push({
-		index: word,
-		x,
-		y,
-		angle,
-		length: branchLength,
-		fontSize,
-		branchLevel,
-		word: currentWord,
-		color: getColor(centralHue, word)
-	});
-	createBranch({
-		words,
-		word: word + 1,
-		branches,
-		x: nextX,
-		y: nextY,
-		angle: leftAngle,
-		fontSize: fontSize - 1,
-		branchLevel: branchLevel + 1,
-		centralHue
-	});
-	createBranch({
-		words,
-		word: word + 2,
-		branches,
-		x: nextX,
-		y: nextY,
-		angle: rightAngle,
-		fontSize: fontSize - 1,
-		branchLevel: branchLevel + 1,
-		centralHue
-	});
-	return;
-};
-
-function getTextWidth(text: string, fontSize: number) {
-	const canvas = document.createElement('canvas');
-	const context = canvas.getContext('2d');
-	if (!context) return 0;
-	context.font = `${fontSize}px sans-serif`;
-
-	return context.measureText(text).width;
-}
 
 export const degToRad = (deg: number) => {
 	return deg * (Math.PI / 180);

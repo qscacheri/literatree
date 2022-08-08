@@ -28,12 +28,9 @@
 <svg class="tree" {viewBox} bind:this={svgRef}>
 	{#if branches.length > 0}
 		<g bind:this={groupRef} transform={transformString}>
-			x={0}
-			y={0}
-			>
 			{#each branches as branch}
 				<Branch
-					delay={true}
+					delay={false}
 					index={branch.index}
 					color={branch.color}
 					x={branch.x}
