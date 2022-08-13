@@ -113,6 +113,7 @@ function getXYFromDistWithAngle(
 
 export function getColor(
 	centralHue: number,
+	drawGreyScale: boolean,
 	index: number,
 	h: number,
 	s: number,
@@ -127,11 +128,9 @@ export function getColor(
 	const lightScale = scaleLinear().domain([0, 1]).range([10, 90]); // 90
 
 	const hScaled = hueScale(h);
-	const sScaled = satScale(s);
+	const sScaled = drawGreyScale ? 0 : satScale(s);
 	const lScaled = lightScale(l);
-	const interpolator = interpolateRgb(
-		'#6A4B28',
-		color(`hsl(${hScaled}, ${sScaled}%, ${lScaled}%)`)?.formatHex() || '#ffffff'
-	);
-	return interpolator(index / 12);
+	const c = color(`hsl(${hScaled}, ${sScaled}%, ${lScaled}%)`)?.formatHex() || '#ffffff';
+	const interpolator = interpolateRgb('#6A4B28', c);
+	return drawGreyScale ? c : interpolator(index / 12);
 }

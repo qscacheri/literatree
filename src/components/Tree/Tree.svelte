@@ -4,11 +4,12 @@
 	import SvgTree from './SVGTree.svelte';
 	export let branches: Branch[];
 	export let canvas = false;
+	export let drawGreyScale: boolean;
 	export let centralHue: number;
 </script>
 
 {#if canvas}
 	<P5Tree {branches} />
 {:else}
-	<SvgTree {branches} {centralHue} />
+	<SvgTree {branches} {centralHue} {drawGreyScale} />
 {/if}

@@ -4,6 +4,8 @@
 
 	export let branches: BranchType[] = [];
 	export let centralHue: number;
+	export let drawGreyScale: boolean;
+
 	let svgRef: SVGSVGElement | null = null;
 	let groupRef: SVGGElement | null = null;
 
@@ -30,6 +32,7 @@
 		<g bind:this={groupRef} transform={transformString}>
 			{#each branches as branch}
 				<Branch
+					{drawGreyScale}
 					{centralHue}
 					delay={false}
 					index={branch.index}

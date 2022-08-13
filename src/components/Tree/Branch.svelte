@@ -10,6 +10,7 @@
 	export let color: { h: number; s: number; l: number };
 	export let centralHue: number;
 	export let delay = true;
+	export let drawGreyScale: boolean;
 
 	let hidden = delay;
 	if (delay)
@@ -25,7 +26,7 @@
 	{x}
 	{y}
 	transform={`rotate(${360 - angle}, ${x}, ${y})`}
-	fill={getColor(centralHue, index, color.h, color.s, color.l)}
+	fill={getColor(centralHue, drawGreyScale, index, color.h, color.s, color.l)}
 >
 	{word}
 </text>

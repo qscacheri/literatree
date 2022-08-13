@@ -1,7 +1,9 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import FileDrop from '../components/FileDrop.svelte';
+	import Spacer from '../components/Spacer.svelte';
 	import Spinner from '../components/Spinner.svelte';
+	import Switch from '../components/Switch.svelte';
 	import Tree from '../components/Tree/Tree.svelte';
 	import type { Branch } from '../lib/createTree';
 	import { readFile } from '../lib/readFile';
@@ -29,6 +31,7 @@
 	};
 
 	let centralHue: number = 360;
+	let drawGreyScale = false;
 
 	let containerWidth = 0;
 	let containerHeight = 0;
@@ -40,23 +43,31 @@
 	<header>Literatree</header>
 	<div class="tree-container" bind:clientWidth={containerWidth} bind:clientHeight={containerHeight}>
 		<div class="controls">
-			<label for="central-hue">Color</label>
-			<input
-				name="central-hue"
-				class="central-hue"
-				bind:value={centralHue}
-				type="range"
-				min={0}
-				max={360}
-				step={1}
-			/>
+			<div class="control-group">
+				<label for="central-hue">Color</label>
+				<input
+					disabled={drawGreyScale}
+					name="central-hue"
+					class="central-hue"
+					bind:value={centralHue}
+					type="range"
+					min={0}
+					max={360}
+					step={1}
+				/>
+			</div>
+			<div class="control-group">
+				<label for="">Draw Grey Scale</label>
+				<Spacer />
+				<Switch bind:on={drawGreyScale} {centralHue} />
+			</div>
 		</div>
 		{#if creating}
 			<div class="overlay">
 				<Spinner />
 			</div>
 		{/if}
-		<Tree {branches} canvas={false} {centralHue} />
+		<Tree {branches} canvas={false} {centralHue} {drawGreyScale} />
 	</div>
 	<FileDrop on:drop={handleDrop} />
 </div>
@@ -98,12 +109,16 @@
 	}
 	.controls {
 		margin: 2rem;
-		display: flex;
 		align-items: center;
 		position: absolute;
 		right: 0;
 		top: 0;
 		z-index: 999;
+	}
+	.control-group {
+		margin: 1rem 0;
+		display: flex;
+		align-items: center;
 	}
 
 	.container {
