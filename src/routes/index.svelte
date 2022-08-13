@@ -11,14 +11,6 @@
 
 	let creating = false;
 
-	async function handleDrop(e: CustomEvent<File>) {
-		branches = [];
-		const file = e.detail;
-		const text = await readFile(file);
-		creating = true;
-		worker?.postMessage({ text, width: containerWidth, height: containerHeight });
-	}
-
 	let worker: Worker | undefined = undefined;
 
 	const loadWorker = async () => {
@@ -36,6 +28,21 @@
 	let containerWidth = 0;
 	let containerHeight = 0;
 
+	let words = '';
+	let maxLevels = 5;
+
+	async function handleDrop(e: CustomEvent<File>) {
+		branches = [];
+		const file = e.detail;
+		const text = await readFile(file);
+		creating = true;
+		words = text as string;
+	}
+
+	$: {
+		if (words.length > 0)
+			worker?.postMessage({ words, width: containerWidth, height: containerHeight, maxLevels });
+	}
 	onMount(loadWorker);
 </script>
 
@@ -45,14 +52,27 @@
 		<div class="controls">
 			<div class="control-group">
 				<label for="central-hue">Color</label>
+				<Spacer />
 				<input
 					disabled={drawGreyScale}
 					name="central-hue"
-					class="central-hue"
 					bind:value={centralHue}
 					type="range"
 					min={0}
 					max={360}
+					step={1}
+				/>
+			</div>
+			<div class="control-group">
+				<label for="max-levels">Max Levels</label>
+				<Spacer />
+				<input
+					disabled={drawGreyScale}
+					name="max-levels"
+					bind:value={maxLevels}
+					type="range"
+					min={1}
+					max={10}
 					step={1}
 				/>
 			</div>
@@ -67,12 +87,15 @@
 				<Spinner />
 			</div>
 		{/if}
-		<Tree {branches} canvas={false} {centralHue} {drawGreyScale} />
+		<Tree {branches} canvas={false} {centralHue} {drawGreyScale} {maxLevels} />
 	</div>
 	<FileDrop on:drop={handleDrop} />
 </div>
 
 <style>
+	p {
+		font-family: 'Roboto Mono', monospace;
+	}
 	header {
 		padding-left: 1rem;
 		color: white;
@@ -82,31 +105,7 @@
 		width: 100%;
 		background-color: black;
 	}
-	.central-hue {
-		-webkit-appearance: none;
-		height: 4px;
-		width: 24rem;
-		margin-left: 1rem;
-		background-color: black;
-		border-radius: 2px;
-	}
-	.central-hue::-webkit-slider-thumb {
-		-webkit-appearance: none;
-		appearance: none;
-		width: 25px;
-		height: 25px;
-		border-radius: 100%;
-		background: white;
-		cursor: pointer;
-	}
 
-	.central-hue::-moz-range-thumb {
-		width: 25px;
-		height: 25px;
-		border-radius: 100%;
-		background: white;
-		cursor: pointer;
-	}
 	.controls {
 		margin: 2rem;
 		align-items: center;

@@ -24,10 +24,15 @@ interface CreateBranchArgs {
 	branchLevel: number;
 }
 
-export const createTree = (text: string, width: number, height: number): Branch[] => {
+export const createTree = (
+	text: string,
+	width: number,
+	height: number,
+	maxBranchLevel: number
+): Branch[] => {
 	const words = text.split(/\s+/);
 	const branches = { value: [] as Branch[] };
-	const level = 10;
+	const level = 0;
 	let wordCounter = 0;
 	const createBranch = ({
 		words,
@@ -39,14 +44,17 @@ export const createTree = (text: string, width: number, height: number): Branch[
 		fontSize,
 		branchLevel
 	}: CreateBranchArgs): void => {
-		const glyphSize = 14;
+		const glyphSize = 18;
 
-		if (fontSize < 20 || wordCounter >= words.length - 1) return;
+		if (branchLevel > maxBranchLevel || wordCounter > words.length - 1) return;
+
 		const currentWord = words[wordCounter];
 		const branchLength = glyphSize * currentWord.length * (fontSize / 30);
 		const leftAngle = angle - (22 - branchLevel * 1.1);
 		const rightAngle = angle + (22 - branchLevel * 1.1);
 		const { x: nextX, y: nextY } = getXYFromDistWithAngle(x, y, angle, branchLength);
+
+		wordCounter++;
 
 		branches.value.push({
 			index: word,
@@ -60,8 +68,6 @@ export const createTree = (text: string, width: number, height: number): Branch[
 			color: { h: Math.random(), s: Math.random(), l: Math.random() }
 		});
 
-		wordCounter++;
-
 		createBranch({
 			words,
 			word: word + 1,
@@ -70,8 +76,9 @@ export const createTree = (text: string, width: number, height: number): Branch[
 			y: nextY,
 			angle: leftAngle,
 			fontSize: fontSize - 1,
-			branchLevel: branchLevel - 1
+			branchLevel: branchLevel + 1
 		});
+
 		createBranch({
 			words,
 			word: word + 2,
@@ -80,7 +87,7 @@ export const createTree = (text: string, width: number, height: number): Branch[
 			y: nextY,
 			angle: rightAngle,
 			fontSize: fontSize - 1,
-			branchLevel: branchLevel - 1
+			branchLevel: branchLevel + 1
 		});
 	};
 	createBranch({

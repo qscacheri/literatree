@@ -6,10 +6,11 @@
 	export let canvas = false;
 	export let drawGreyScale: boolean;
 	export let centralHue: number;
+	export let maxLevels: number;
 </script>
 
 {#if canvas}
 	<P5Tree {branches} />
 {:else}
-	<SvgTree {branches} {centralHue} {drawGreyScale} />
+	<SvgTree {branches} {centralHue} {drawGreyScale} {maxLevels} />
 {/if}

@@ -9,3 +9,29 @@
 	padding: 0;
 	box-sizing: border-box;
 }
+
+input[type='range'] {
+	-webkit-appearance: none;
+	height: 4px;
+	width: 24rem;
+	margin-left: 1rem;
+	background-color: black;
+	border-radius: 2px;
+}
+input[type='range']::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	appearance: none;
+	width: 25px;
+	height: 25px;
+	border-radius: 100%;
+	background: white;
+	cursor: pointer;
+}
+
+input[type='range']::-moz-range-thumb {
+	width: 25px;
+	height: 25px;
+	border-radius: 100%;
+	background: white;
+	cursor: pointer;
+}

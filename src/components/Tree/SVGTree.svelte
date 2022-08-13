@@ -5,14 +5,16 @@
 	export let branches: BranchType[] = [];
 	export let centralHue: number;
 	export let drawGreyScale: boolean;
+	export let maxLevels: number;
 
 	let svgRef: SVGSVGElement | null = null;
 	let groupRef: SVGGElement | null = null;
-
 	let transform = { scale: 1, x: 0, y: 0 };
 	let transformString = '';
 	$: viewBox = svgRef ? `0 0 ${svgRef.clientWidth} ${svgRef.clientHeight}` : '0 0 1 1';
 	$: {
+		// putting this here triggers svelte's reactivity. DO NOT REMOVE
+		maxLevels;
 		if (groupRef && svgRef) {
 			const { width, height, x, y } = groupRef.getBBox();
 			const scale = Math.min(svgRef.clientWidth / width, svgRef.clientHeight / height);
