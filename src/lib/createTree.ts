@@ -22,15 +22,9 @@ interface CreateBranchArgs {
 	angle: number;
 	fontSize: number;
 	branchLevel: number;
-	centralHue: number;
 }
 
-export const createTree = (
-	text: string,
-	centralHue: number,
-	width: number,
-	height: number
-): Branch[] => {
+export const createTree = (text: string, width: number, height: number): Branch[] => {
 	const words = text.split(/\s+/);
 	const branches = { value: [] as Branch[] };
 	const level = 10;
@@ -43,9 +37,10 @@ export const createTree = (
 		y,
 		angle,
 		fontSize,
-		centralHue,
 		branchLevel
 	}: CreateBranchArgs): void => {
+		const glyphSize = 14;
+
 		if (fontSize < 20 || wordCounter >= words.length - 1) return;
 		const currentWord = words[wordCounter];
 		const branchLength = glyphSize * currentWord.length * (fontSize / 30);
@@ -75,8 +70,7 @@ export const createTree = (
 			y: nextY,
 			angle: leftAngle,
 			fontSize: fontSize - 1,
-			branchLevel: branchLevel - 1,
-			centralHue
+			branchLevel: branchLevel - 1
 		});
 		createBranch({
 			words,
@@ -86,8 +80,7 @@ export const createTree = (
 			y: nextY,
 			angle: rightAngle,
 			fontSize: fontSize - 1,
-			branchLevel: branchLevel - 1,
-			centralHue
+			branchLevel: branchLevel - 1
 		});
 	};
 	createBranch({
@@ -98,13 +91,10 @@ export const createTree = (
 		y: height,
 		angle: 90,
 		fontSize: 30,
-		branchLevel: level,
-		centralHue
+		branchLevel: level
 	});
 	return branches.value;
 };
-
-const glyphSize = 14;
 
 export const degToRad = (deg: number) => {
 	return deg * (Math.PI / 180);

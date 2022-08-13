@@ -28,7 +28,7 @@
 		};
 	};
 
-	let centralHue: number = 110;
+	let centralHue: number = 360;
 
 	let containerWidth = 0;
 	let containerHeight = 0;
