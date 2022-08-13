@@ -81,6 +81,23 @@
 				<Spacer />
 				<Switch bind:on={drawGreyScale} {centralHue} />
 			</div>
+			<button
+				on:click={() => {
+					if (words.length > 0) {
+						branches = [];
+						worker?.postMessage({
+							words,
+							width: containerWidth,
+							height: containerHeight,
+							maxLevels
+						});
+					}
+
+					worker?.postMessage({ words, width: containerWidth, height: containerHeight, maxLevels });
+				}}
+			>
+				Randomize</button
+			>
 		</div>
 		{#if creating}
 			<div class="overlay">
@@ -93,9 +110,6 @@
 </div>
 
 <style>
-	p {
-		font-family: 'Roboto Mono', monospace;
-	}
 	header {
 		padding-left: 1rem;
 		color: white;
