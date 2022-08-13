@@ -1,9 +1,9 @@
 <script lang="ts">
 	import Branch from './Branch.svelte';
-	import type { Branch as BranchType } from '../lib/createTree';
+	import type { Branch as BranchType } from '../../lib/createTree';
 
 	export let branches: BranchType[] = [];
-
+	export let centralHue: number;
 	let svgRef: SVGSVGElement | null = null;
 	let groupRef: SVGGElement | null = null;
 
@@ -30,6 +30,7 @@
 		<g bind:this={groupRef} transform={transformString}>
 			{#each branches as branch}
 				<Branch
+					{centralHue}
 					delay={false}
 					index={branch.index}
 					color={branch.color}
@@ -45,11 +46,6 @@
 </svg>
 
 <style>
-	g {
-		/* transform-origin: 50% 50%; */
-		/* outline: solid 3px blue;
-		outline-offset: 5px; */
-	}
 	.tree {
 		width: 100%;
 		height: 100%;

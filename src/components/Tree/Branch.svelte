@@ -1,11 +1,14 @@
 <script lang="ts">
+	import { getColor } from '../../lib/createTree';
+
 	export let index: number;
 	export let angle: number;
 	export let x: number;
 	export let y: number;
 	export let fontSize: number;
 	export let word: string;
-	export let color: string;
+	export let color: { h: number; s: number; l: number };
+	export let centralHue: number;
 	export let delay = true;
 
 	let hidden = delay;
@@ -22,12 +25,11 @@
 	{x}
 	{y}
 	transform={`rotate(${360 - angle}, ${x}, ${y})`}
-	fill={color}
+	fill={getColor(centralHue, index, color.h, color.s, color.l)}
 >
 	{word}
 </text>
 
-<!-- <circle r="5" cx={x} cy={y} fill={color} /> -->
 <style>
 	text {
 		font-family: 'Roboto Mono', monospace;

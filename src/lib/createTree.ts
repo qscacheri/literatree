@@ -10,7 +10,7 @@ export type Branch = {
 	fontSize: number;
 	branchLevel: number;
 	word: string;
-	color: string;
+	color: { h: number; s: number; l: number };
 };
 
 interface CreateBranchArgs {
@@ -25,7 +25,12 @@ interface CreateBranchArgs {
 	centralHue: number;
 }
 
-export const createTree = (text: string, centralHue: number): Branch[] => {
+export const createTree = (
+	text: string,
+	centralHue: number,
+	width: number,
+	height: number
+): Branch[] => {
 	const words = text.split(/\s+/);
 	const branches = { value: [] as Branch[] };
 	const level = 10;
@@ -57,7 +62,7 @@ export const createTree = (text: string, centralHue: number): Branch[] => {
 			fontSize,
 			branchLevel,
 			word: currentWord,
-			color: getColor(centralHue, word)
+			color: { h: Math.random(), s: Math.random(), l: Math.random() }
 		});
 
 		wordCounter++;
@@ -89,8 +94,8 @@ export const createTree = (text: string, centralHue: number): Branch[] => {
 		words,
 		branches,
 		word: 0,
-		x: 50,
-		y: 100,
+		x: width / 2,
+		y: height,
 		angle: 90,
 		fontSize: 30,
 		branchLevel: level,
@@ -116,7 +121,13 @@ function getXYFromDistWithAngle(
 	return { x: targetX, y: targetY };
 }
 
-function getColor(centralHue: number, index = 0) {
+export function getColor(
+	centralHue: number,
+	index: number,
+	h: number,
+	s: number,
+	l: number
+): string {
 	const hueScale = scaleLinear()
 		.domain([0, 1])
 		.range([centralHue - (30 % 360), centralHue + (30 % 360)]);
@@ -125,12 +136,12 @@ function getColor(centralHue: number, index = 0) {
 
 	const lightScale = scaleLinear().domain([0, 1]).range([10, 90]); // 90
 
-	const h = hueScale(Math.random());
-	const s = satScale(Math.random());
-	const l = lightScale(Math.random());
+	const hScaled = hueScale(h);
+	const sScaled = satScale(s);
+	const lScaled = lightScale(l);
 	const interpolator = interpolateRgb(
 		'#6A4B28',
-		color(`hsl(${h}, ${s}%, ${l}%)`)?.formatHex() || '#ffffff'
+		color(`hsl(${hScaled}, ${sScaled}%, ${lScaled}%)`)?.formatHex() || '#ffffff'
 	);
 	return interpolator(index / 12);
 }
