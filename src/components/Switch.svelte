@@ -7,8 +7,8 @@
 	$: onColor = getOnColor(centralHue);
 </script>
 
-<div class="container">
-	<div on:click={() => (on = !on)} class="thumb" style={`--on-color: ${onColor};`} class:on />
+<div class="container" on:click={() => (on = !on)}>
+	<div class="thumb" style={`--on-color: ${onColor};`} class:on />
 </div>
 
 <style>
@@ -20,6 +20,7 @@
 		background-color: white;
 		padding: 2px;
 		border-radius: 4rem;
+		cursor: pointer;
 		transform: translate3d(0, 0, 0);
 	}
 	.thumb.on {
@@ -29,7 +30,6 @@
 	.thumb {
 		background-color: var(--on-color);
 		outline-color: var(--on-color);
-		cursor: pointer;
 		transition: transform 0.2s;
 		width: 1.5rem;
 		height: 1.5rem;
