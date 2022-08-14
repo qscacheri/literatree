@@ -68,6 +68,11 @@
 		place-items: center;
 		width: 100%;
 		height: 100%;
-		font-size: 2rem;
+		font-size: 1rem;
+	}
+	@media (min-width: 1024px) {
+		label {
+			font-size: 2.5rem;
+		}
 	}
 </style>

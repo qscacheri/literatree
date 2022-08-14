@@ -1,21 +1,25 @@
 <script lang="ts">
 	import Branch from './Branch.svelte';
 	import type { Branch as BranchType } from '../../lib/createTree';
+	import { readAsDataUrl } from '../../lib/readAsDataUrl';
+	import { onMount } from 'svelte';
 
 	export let branches: BranchType[] = [];
 	export let centralHue: number;
 	export let drawGreyScale: boolean;
 	export let maxLevels: number;
 
-	let svgRef: SVGSVGElement | null = null;
+	export let svgRef: SVGSVGElement | null = null;
 	let groupRef: SVGGElement | null = null;
 	let transform = { scale: 1, x: 0, y: 0 };
 	let transformString = '';
+
+	let svgDefs = '<defs></defs>';
+	$: console.log(svgDefs);
 	$: viewBox = svgRef ? `0 0 ${svgRef.clientWidth} ${svgRef.clientHeight}` : '0 0 1 1';
 	$: {
 		// putting this here triggers svelte's reactivity. DO NOT REMOVE
-		maxLevels;
-		if (groupRef && svgRef) {
+		if (groupRef && svgRef && maxLevels) {
 			const { width, height, x, y } = groupRef.getBBox();
 			const scale = Math.min(svgRef.clientWidth / width, svgRef.clientHeight / height);
 			const newWidth = width * scale;

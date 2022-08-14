@@ -37,7 +37,6 @@
 	}
 	.branch {
 		opacity: 1;
-		transition: all 1s linear;
 	}
 	.hidden {
 		opacity: 0;

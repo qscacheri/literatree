@@ -33,7 +33,7 @@
 				p5.translate(branch.x, branch.y);
 				p5.angleMode(p5.DEGREES);
 				p5.rotate(360 - branch.angle);
-				p5.fill(branch.color);
+				// p5.fill(branch.color);
 				p5.text(branch.word, 0, 0);
 				p5.pop();
 			});
